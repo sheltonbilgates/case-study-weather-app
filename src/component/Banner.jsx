@@ -19,19 +19,35 @@ const Banner = () => {
   const [dailyData, setDailyData] = useState([]);
 
   useEffect(() => {
-    if (getPosition) {
-      if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-          setPosition({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          });
-        });
-      } else {
-        setGetPosition(false);
-        alert("Geolocation is not available in your browser");
+    const getUserLocation = async () => {
+      try {
+        if (getPosition) {
+          if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(async function (position) {
+              setPosition({
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+              });
+  
+             
+              const apiPos = `http://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&appid=69cca3f8467d482bb64b4336b16773b6`;
+  
+              const res = await axios.get(apiPos);
+  
+              setCity(res.data.name);
+            });
+          } else {
+            setGetPosition(false);
+            alert("Geolocation is not available in your browser");
+          }
+        }
+      } catch (error) {
+        alert("Error getting user location:", error);
+     
       }
-    }
+    };
+  
+    getUserLocation();
   }, [getPosition]);
   // let celcius = 0;
   // let faranheit = 0;
