@@ -106,38 +106,42 @@ const Banner = () => {
   };
 
   useEffect(() => {
-    if (weather) {
-      try {
-        const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&exclude=current,minutely,alerts&units=metric&appid=69cca3f8467d482bb64b4336b16773b6`;
-
-        axios.get(url).then((response) => {
-          const allData = response.data.list;
-
-          // Extracting hourly data for today
-          const today = new Date().toLocaleDateString();
-          const todayHourly = allData.filter(
-            (item) => new Date(item.dt * 1000).toLocaleDateString() === today
-          );
-
-          // Extracting one entry per day for the next 7 days
-          const next7DaysData = [];
-          const next7DaysSet = new Set();
-
-          allData.forEach((item) => {
-            const itemDate = new Date(item.dt * 1000).toLocaleDateString();
-            if (!next7DaysSet.has(itemDate)) {
-              next7DaysSet.add(itemDate);
-              next7DaysData.push(item);
+    const fetchWeather = async () => {
+        if (weather) {
+            try {
+              const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&exclude=current,minutely,alerts&units=metric&appid=69cca3f8467d482bb64b4336b16773b6`;
+      
+              await axios.get(url).then((response) => {
+                const allData = response.data.list;
+      
+                // Extracting hourly data for today
+                const today = new Date().toLocaleDateString();
+                const todayHourly = allData.filter(
+                  (item) => new Date(item.dt * 1000).toLocaleDateString() === today
+                );
+      
+                // Extracting one entry per day for the next 7 days
+                const next7DaysData = [];
+                const next7DaysSet = new Set();
+      
+                allData.forEach((item) => {
+                  const itemDate = new Date(item.dt * 1000).toLocaleDateString();
+                  if (!next7DaysSet.has(itemDate)) {
+                    next7DaysSet.add(itemDate);
+                    next7DaysData.push(item);
+                  }
+                });
+      
+                setHourlyData(todayHourly);
+                setDailyData(next7DaysData);
+              });
+            } catch (e) {
+              console.log(e);
             }
-          });
-
-          setHourlyData(todayHourly);
-          setDailyData(next7DaysData);
-        });
-      } catch (e) {
-        console.log(e);
-      }
+          }
     }
+    fetchWeather()
+    
   }, [weather, city]);
 
   const [value, setValue] = React.useState("one");

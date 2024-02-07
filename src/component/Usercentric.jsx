@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import "apexcharts";
-// import Footbar from "./Footbar";
 
 const Usercentric = ({ city, position }) => {
   const [startDate, setStartDate] = useState("");
@@ -15,12 +14,12 @@ const Usercentric = ({ city, position }) => {
   // console.log("pos", position.latitude, position.longitude);
   // c
   useEffect(() => {
-    const fetchAPI = () => {
+    const fetchAPI = async () => {
       if (chart) {
         if (position) {
           const apiURL = `https://climate-api.open-meteo.com/v1/climate?latitude=${position.latitude}&longitude=${position.longitude}&start_date=${startDate}&end_date=${endDate}&models=MRI_AGCM3_2_S&daily=temperature_2m_max`;
 
-          axios.get(apiURL).then((response) => {
+          await axios.get(apiURL).then((response) => {
             const dailyData = response.data.daily;
 
             const dataTable = {
@@ -35,7 +34,7 @@ const Usercentric = ({ city, position }) => {
         } else if (city) {
           const api = `https://climate-api.open-meteo.com/v1/climate?latitude=${city.latitude}&longitude=${city.longitude}&start_date=${startDate}&end_date=${endDate}&models=MRI_AGCM3_2_S&daily=temperature_2m_max`;
 
-          axios.get(api).then((res) => {
+          await axios.get(api).then((res) => {
             const dailyData = res.data.daily;
 
             const dataTable = {
@@ -112,10 +111,10 @@ const Usercentric = ({ city, position }) => {
     setNotification(true)
   }
   return (
-    <div className="h-screen  dark:bg-[#272635]  bg-[#E8E9F3">
+    <div className="dark:bg-[#272635]  bg-[#E8E9F3">
       <div className=" h-96 rounded-2xl mt-4 mr-8 ml-8 shadow-2xl dark:text-white text-black border grid grid-cols-3 gap-4 flex-wrap" >
         <div className="col-span-2 p-2">
-          <h1>Future Forecast</h1>
+          <h1 className="font-semibold text-xl">Future Forecast</h1>
           <div className="flex flex-row ">
             <div className="flex flex-col w-48 p-2">
               <label className="p-2 " htmlFor="start">
@@ -158,7 +157,7 @@ const Usercentric = ({ city, position }) => {
           </div>
         </div>
         <div className="p-2">
-            <p>For alerts regarding weather in your city</p>
+            <p className="font-semibold text-center">For alerts regarding weather in your city</p>
             <form action="" className="pt-4 flex flex-col" onSubmit={(e)=>handleSubmit(e)}>
                 <label htmlFor="name">Name: </label>
                 <input className="rounded-xl  dark: text-black pl-2" placeholder="Enter your name" id="name" type="text" required/>
@@ -179,7 +178,9 @@ const Usercentric = ({ city, position }) => {
             </form>
         </div>
       </div>
-      {/* <Footbar /> */}
+      <div className="h-10">
+        
+      </div>
     </div>
   );
 };
