@@ -30,7 +30,7 @@ const Banner = () => {
               });
   
              
-              const apiPos = `http://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&appid=69cca3f8467d482bb64b4336b16773b6`;
+              const apiPos = `https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&appid=69cca3f8467d482bb64b4336b16773b6`;
   
               const res = await axios.get(apiPos);
   
@@ -56,7 +56,7 @@ const Banner = () => {
     const getWeatherData = () => {
       try {
         if (getPosition) {
-          const apiPos = `http://api.openweathermap.org/data/2.5/weather?lat=${position.latitude}&lon=${position.longitude}&appid=69cca3f8467d482bb64b4336b16773b6`;
+          const apiPos = `https://api.openweathermap.org/data/2.5/weather?lat=${position.latitude}&lon=${position.longitude}&appid=69cca3f8467d482bb64b4336b16773b6`;
 
           axios.get(apiPos).then((ress) => {
             setCity(ress.data.name);
